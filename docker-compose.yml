@@ -1,6 +1,12 @@
 version: '3.8'
 
 services:
+
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - "5672:5672"
+
   postgres-db:
     image: postgres:latest
     ports:
@@ -21,6 +27,7 @@ services:
       - "8084:8084"
     depends_on:
       - postgres-db
+      - rabbitmq
     restart: on-failure
 
 volumes:

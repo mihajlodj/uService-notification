@@ -9,7 +9,15 @@ public class QueueConfig {
 
     @Bean
     public Queue notificationQueue() {
-        return new Queue("notificationQueue", false);
+        return new Queue("notificationQueue");
     }
+
+    //systemctl status rabbitmq-server.service
+    //systemctl start rabbitmq-server
+    //          (stop)
+    //sudo systemctl enable  rabbitmq-server
+    //               (disable)
+
+    //sudo rabbitmq-server
 
 }

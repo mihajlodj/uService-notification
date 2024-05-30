@@ -27,7 +27,7 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final AmqpTemplate notificationTemplate;
 
-    @RabbitListener(queues = "notificaitonQueue", concurrency = "5")
+    @RabbitListener(queues = "notificationQueue", concurrency = "5")
     public void notificationListener(Message message) throws IOException, ClassNotFoundException {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(message.getBody());
         ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
