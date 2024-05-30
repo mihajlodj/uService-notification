@@ -1,9 +1,6 @@
 package ftn.notificationservice.exception;
 
-import ftn.notificationservice.exception.exceptions.AuthorizationException;
-import ftn.notificationservice.exception.exceptions.BadRequestException;
-import ftn.notificationservice.exception.exceptions.ForbiddenException;
-import ftn.notificationservice.exception.exceptions.NotFoundException;
+import ftn.notificationservice.exception.exceptions.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +43,13 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(AuthorizationException.class)
     public ResponseEntity<?> handleAuthorization(AuthorizationException exception) {
+        log.error(exception.getMessage(), exception);
+        HttpStatus status = getResponseStatus(exception.getClass());
+        return ResponseEntity.status(status).body(new ExceptionMessage(exception.getMessage()));
+    }
+
+    @ExceptionHandler(InternalException.class)
+    public ResponseEntity<?> handleInternal(InternalException exception) {
         log.error(exception.getMessage(), exception);
         HttpStatus status = getResponseStatus(exception.getClass());
         return ResponseEntity.status(status).body(new ExceptionMessage(exception.getMessage()));
