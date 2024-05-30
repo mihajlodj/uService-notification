@@ -2,6 +2,7 @@ package ftn.notificationservice.services;
 
 import ftn.notificationservice.domain.dtos.NotificationDto;
 import ftn.notificationservice.domain.dtos.NotificationRequest;
+import ftn.notificationservice.domain.dtos.UserDto;
 import ftn.notificationservice.domain.entities.Notification;
 import ftn.notificationservice.domain.mappers.NotificationMapper;
 import ftn.notificationservice.repositories.NotificationRepository;
@@ -26,6 +27,7 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final AmqpTemplate notificationTemplate;
+    private final RestService restService;
 
     @RabbitListener(queues = "notificationQueue", concurrency = "5")
     public void notificationListener(Message message) throws IOException, ClassNotFoundException {
@@ -41,6 +43,7 @@ public class NotificationService {
         notification.setMessage();
 
         //TODO get user -> if notifications allowed -> send
+        UserDto user = restService.getUserById(notification.getUserId());
         //TODO email sender
 
         notificationRepository.save(notification);
