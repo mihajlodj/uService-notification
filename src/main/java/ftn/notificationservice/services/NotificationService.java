@@ -26,8 +26,8 @@ import java.util.stream.Collectors;
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
-    private final AmqpTemplate notificationTemplate;
     private final RestService restService;
+    private final EmailService emailService;
 
     @RabbitListener(queues = "notificationQueue", concurrency = "5")
     public void notificationListener(Message message) throws IOException, ClassNotFoundException {
@@ -42,11 +42,12 @@ public class NotificationService {
         Notification notification = NotificationMapper.INSTANCE.fromRequest(notificationRequest);
         notification.setMessage();
 
-        //TODO get user -> if notifications allowed -> send
         UserDto user = restService.getUserById(notification.getUserId());
-        //TODO email sender
 
-        notificationRepository.save(notification);
+        if (user.isNotificationsAllowed()) {
+            emailService.sendMessage(user.getEmail(), "New message from FTN booking", notification.getMessage());
+            notificationRepository.save(notification);
+        }
     }
 
     public List<NotificationDto> getNotificationsByUserId(UUID userId) {
