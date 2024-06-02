@@ -11,6 +11,8 @@ services:
     image: postgres:latest
     ports:
       - "5436:5432"
+    networks:
+      - ftn_devops_network
     environment:
       POSTGRES_DB: devops_notification_db
       POSTGRES_USER: postgres
@@ -25,10 +27,16 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
     ports:
       - "8084:8084"
+    networks:
+      - ftn_devops_network
     depends_on:
       - postgres-db
       - rabbitmq
     restart: on-failure
+
+networks:
+  ftn_devops_network:
+    external: true
 
 volumes:
   postgres-db:
