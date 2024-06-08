@@ -16,7 +16,6 @@ public class NotificationRequest {
 
     @NotEmpty
     private String userId;
-    private String email;
     @NotNull
     private NotificationType notificationType;
 
