@@ -46,6 +46,7 @@ public class NotificationService {
 
         if (user.isNotificationsAllowed()) {
             emailService.sendMessage(user.getEmail(), "New message from FTN booking", notification.getMessage());
+            notification.setEmail(user.getEmail());
             notificationRepository.save(notification);
         }
     }
