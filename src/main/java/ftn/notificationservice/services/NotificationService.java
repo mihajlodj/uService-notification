@@ -8,6 +8,7 @@ import ftn.notificationservice.domain.mappers.NotificationMapper;
 import ftn.notificationservice.repositories.NotificationRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -21,6 +22,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class NotificationService {
@@ -30,11 +32,7 @@ public class NotificationService {
     private final EmailService emailService;
 
     @RabbitListener(queues = "notificationQueue", concurrency = "5")
-    public void notificationListener(Message message) throws IOException, ClassNotFoundException {
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(message.getBody());
-        ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-
-        NotificationRequest notificationRequest = (NotificationRequest) objectInputStream.readObject();
+    public void notificationListener(NotificationRequest notificationRequest) throws IOException, ClassNotFoundException {
         sendNotification(notificationRequest);
     }
 
@@ -48,6 +46,7 @@ public class NotificationService {
             emailService.sendMessage(user.getEmail(), "New message from FTN booking", notification.getMessage());
             notification.setEmail(user.getEmail());
             notificationRepository.save(notification);
+            log.info("Sent notification to " + user.getEmail());
         }
     }
 

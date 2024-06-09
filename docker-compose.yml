@@ -6,8 +6,10 @@ services:
     image: rabbitmq
     ports:
       - "5672:5672"
+    networks:
+      - ftn_devops_network
 
-  postgres-db:
+  postgres-db-notification:
     image: postgres:latest
     ports:
       - "5436:5432"
@@ -21,7 +23,7 @@ services:
   notification-service:
     build: .
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/devops_notification_db
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db-notification:5432/devops_notification_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: devops123
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
@@ -30,7 +32,7 @@ services:
     networks:
       - ftn_devops_network
     depends_on:
-      - postgres-db
+      - postgres-db-notification
       - rabbitmq
     restart: on-failure
 
@@ -39,4 +41,4 @@ networks:
     external: true
 
 volumes:
-  postgres-db:
+  postgres-db-notification:
