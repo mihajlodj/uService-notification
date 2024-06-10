@@ -34,7 +34,6 @@ public class NotificationServiceTest extends AuthPostgresIntegrationTest {
 
         NotificationRequest request = NotificationRequest.builder()
                 .userId(userId)
-                .email(userEmail)
                 .notificationType(NotificationType.RESERVATION_CANCEL)
                 .build();
 
